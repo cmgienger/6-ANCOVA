@@ -5,6 +5,8 @@ date: "November 27, 2018"
 output:
   html_document:
     df_print: paged
+  html_notebook:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
