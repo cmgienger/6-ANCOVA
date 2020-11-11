@@ -9,16 +9,21 @@ library(ggfortify)
 
 #import and view data
 limp <- read.csv("limpet.csv")
+limp$SEASON <- as.factor(limp$SEASON) #force SEASON to be considered as a factor
+
 View(limp)
 glimpse(limp)
 
-#as always, we make a plot to visualize data
+#as always, we make a plot to visualize data; no fit lines yet
 ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
   geom_point() +
   scale_color_manual(values = c(spring="green", summer="red")) +
   theme_bw()
 
-# Can also use the 'ancovaplot' function in the HH package to plot and fit lines
+#technical note about fitting group-specific regression lines
+#https://stackoverflow.com/questions/16830947/ancova-plot-in-ggplot
+
+#HH package has slick plotting function
 ancovaplot(EGGS ~ DENSITY + SEASON, data=limp) #equal slopes plot
 ancovaplot(EGGS ~ DENSITY * SEASON, data=limp) #separate slopes plot
 
@@ -29,7 +34,7 @@ limp.mod <- lm(EGGS ~ DENSITY * SEASON, data = limp)
 names(limp.mod)
 
 #check model assumptions
-autoplot(limp.mod, smooth.colour = NA)
+autoplot(limp.mod, smooth.colour = "green")
 
 #interpret the model
 anova(limp.mod)
