@@ -27,20 +27,21 @@ View(limp)
 glimpse(limp)
 ```
 
-```{r visualize}
+```{r visualize using ggplot}
 #as always, we make a plot to visualize data
-ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
+plot_eggs <- ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
   geom_point() +
   scale_color_manual(values = c(spring="green", summer="red")) +
   theme_bw()
+plot_eggs
 ```
 
 Can also use the 'ancovaplot' function in the HH package to plot and fit lines
-```{r ancova plot function-1}
+```{r ancova plot additive}
 ancovaplot(EGGS ~ DENSITY + SEASON, data=limp, superpose.panel = TRUE) #equal slopes plot
 ```
 
-```{r ancova plot function-2}
+```{r ancova plot interaction}
 ancovaplot(EGGS ~ DENSITY * SEASON, data=limp) #separate slopes plot
 ```
 
@@ -48,8 +49,16 @@ ancovaplot(EGGS ~ DENSITY * SEASON, data=limp) #separate slopes plot
 #specify the ANCOVA model
 limp.mod <- lm(EGGS ~ DENSITY * SEASON, data = limp)
 
+#specify the best-fitting lines, which are model predictions
+predictions_limp.mod <- predict(limp.mod)
+
 #details about the model
 names(limp.mod)
+```
+```{r plot with equal slopes}
+#plot the predicted values (fitted lines)
+plot_eggs + 
+  geom_line(aes(y=predictions_limp.mod))
 ```
 
 ```{r check model assumptions, message=FALSE, warning=FALSE}
