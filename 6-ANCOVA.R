@@ -23,7 +23,7 @@ ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
 #technical note about fitting group-specific regression lines
 #https://stackoverflow.com/questions/16830947/ancova-plot-in-ggplot
 
-#HH package has slick plotting function
+#HH package has slick plotting function 'ancovaplot'
 ancovaplot(EGGS ~ DENSITY + SEASON, data=limp) #equal slopes plot
 ancovaplot(EGGS ~ DENSITY * SEASON, data=limp) #separate slopes plot
 
@@ -53,7 +53,7 @@ summary(limp.mod.nointeraction)
 anova(limp.mod, limp.mod.nointeraction)
 #they have statistically similar explanatory power
 
-#emmeans to compare adjusted tail lengths
+#emmeans to compare density-adjusted seasonal means
 emm_limp.mod.nointeraction <- emmeans(limp.mod.nointeraction, "SEASON")
 emm_limp.mod.nointeraction
 
