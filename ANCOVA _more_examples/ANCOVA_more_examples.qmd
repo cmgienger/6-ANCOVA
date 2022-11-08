@@ -4,6 +4,7 @@ subtitle: "More Examples"
 format: revealjs
 editor: visual
 code-line-numbers: false
+chalkboard: true
 ---
 
 Setup
@@ -110,7 +111,7 @@ ggplot(molerat, aes(x = lnMass, y = lnEnergy, color = caste) ) +
 
 These lines are definitely parallel and our model supports this rather than the separate slopes model.
 
-## ANOVA Table - Same Slopes
+## ANOVA Table - Same Slopes {.smaller}
 ANOVA and Summary tables to help with reporting results.
 ```{r}
 anova(model2)
