@@ -1,0 +1,134 @@
+---
+title: "ANCOVA"
+subtitle: "More Examples" 
+format: revealjs
+editor: visual
+code-line-numbers: false
+chalkboard: true
+---
+
+Setup
+
+```{r setup}
+#| echo: true
+library(ggplot2)
+library(multcomp)
+library(multcompView)
+```
+
+```{r}
+#| echo: false
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Molerat Example {.smaller}
+
+Mole rats are the only known mammals with distinct social castes.
+A single queen and a small number of males are the only reproducing individuals in a colony.
+Remaining individuals, called workers, gather food, defend the colony, care for the young, and maintain the burrows.
+<br> <br> "Frequent workers" do almost all of the work in the colony, whereas "infrequent workers" do little work except on rare occasions after rains, when they extend the burrow system.
+To assess the physiological differences between the two types of workers, Scantlebury et al. (2006) compared daily energy expenditures of wild mole rats during a dry season.
+Energy expenditure appears to vary with body mass in both groups, but infrequent workers are heavier than frequent workers.
+<br> <br> How different is mean daily energy expenditure between the two groups when adjusted for differences in body mass?
+
+## Molerats
+
+![](images/molerat.jpeg){fig-align="center"}
+How different is mean daily energy expenditure between the two groups when adjusted for differences in body mass?
+
+## Molerats: Read in the data
+
+```{r}
+molerat <- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp-content/data/chapter18/chap18e4MoleRatLayabouts.csv"))
+str(molerat)
+```
+
+</br> Note that these are log transformed data.
+
+## Molerats: Visualize the Data
+
+```{r}
+ggplot(molerat, aes(x = lnMass, y = lnEnergy, colour = caste)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+ 
+  #this method allows regression lines to be heterogeneous
+  theme_bw()
+```
+
+Lines don't look very parallel.
+Need to test.
+</br> First we fit a model allowing separate slopes.
+
+## Molerats: Fit Separate Slopes Model {.smaller}
+
+```{r}
+model1<-lm(lnEnergy~lnMass*caste, data=molerat)
+summary(model1)
+```
+
+</br> The interaction is not significant (P = 0.32); therefore we have evidence that it is not important and should be removed.
+
+## Molerats: Fit Same Slopes Model {.smaller}
+
+```{r}
+model2<-lm(lnEnergy~lnMass+caste, data=molerat)
+summary(model2)
+```
+
+As mass increases, energy use increases.
+</br> After accounting for variation in body mass, there is a significant effect of caste.
+
+## Compare Models
+
+Lets check whether we are justified in removing N.S.
+interaction term.
+
+```{r}
+anova(model1, model2)
+```
+
+</br> There is no significant difference between the models, so the simpler explanation should be supported.
+</br>
+</br> Including the N.S.
+interaction term did not lead to a better explanation.
+
+## Generate Predictions to use in Same-Slopes Graph
+`Model 2` had parallel slopes (no interaction).
+
+```{r}
+molerat$predlm <- predict(model2)
+head(molerat)
+```
+
+We added a column with the 'predictions' for a straight line (same slopes) model.
+
+## Use Predictions in Same Slopes Figure
+```{r}
+ggplot(molerat, aes(x = lnMass, y = lnEnergy, color = caste) ) +
+     geom_point() +
+     geom_line(aes(y = predlm))
+```
+
+These lines are definitely parallel and our model supports this rather than the separate slopes model.
+
+## ANOVA Table - Same Slopes {.smaller}
+ANOVA and Summary tables to help with reporting results.
+```{r}
+anova(model2)
+summary(model2)
+```
+
+## Molerat Results Statement
+"We tested the hypothesis that energy expenditure of molerats differed among castes after accounting for differences in body mass between the groups. We found a positive relationship between mass and energy expenditure (slope = 0.89, t = 4.6, P < 0.001), and after accounting for body mass, there was a difference between worker and lazy castes (t = 2.69, P = 0.01)."
+
+</br>
+</br>
+The difference in energy expenditure between lazy rats and worker rats was ln(0.393) [look at summary(model2) output]. If we are going to report this, we need to back transform (not done here for clarity).
+
+## Practice with `msleep` Data from ggplot {.smaller}
+Is there a difference between carnivores (Carnivora) and rodents (Rodentia) in duration of REM sleep after accounting for variation in total amount of sleep?
+
+```{r}
+head(msleep)
+```
+
