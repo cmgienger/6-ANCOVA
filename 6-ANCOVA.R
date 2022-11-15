@@ -64,3 +64,18 @@ means <- limp %>%
 means
 
 #in this case raw and adjusted means are similar (b/c fake data?)
+
+#make a ggplot for ANCOVA analysis(below)
+
+#generate prediction lines from the model; put lines on top of plot
+#since we defined a model with an interaction (*), lines are free to have different slopes
+limp.mod.predictions <- predict(limp.mod) 
+
+#make ggplot with prediction lines on top
+ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
+  geom_point() +
+  geom_line(aes(y=limp.mod.predictions))+
+  scale_color_manual(values = c(spring="green", summer="red")) +
+  theme_bw()
+
+              
