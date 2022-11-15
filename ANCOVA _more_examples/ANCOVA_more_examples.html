@@ -392,9 +392,10 @@
 
 <p>Setup</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcompView)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcompView)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 
@@ -429,7 +430,7 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span> </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#this method allows regression lines to be heterogeneous</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="ANCOVA_more_examples_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"><p>Lines don’t look very parallel. Need to test. <br> First we fit a model allowing separate slopes.</p>
@@ -533,7 +534,8 @@ Model 2: lnEnergy ~ lnMass + caste
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(molerat, <span class="fu">aes</span>(<span class="at">x =</span> lnMass, <span class="at">y =</span> lnEnergy, <span class="at">color =</span> caste) ) <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> predlm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> predlm)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="ANCOVA_more_examples_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><p>These lines are definitely parallel and our model supports this rather than the separate slopes model.</p>
@@ -587,20 +589,31 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
 <h2>Practice with <code>msleep</code> Data from ggplot</h2>
 <p>Is there a difference between carnivores (Carnivora) and rodents (Rodentia) in duration of REM sleep after accounting for variation in total amount of sleep?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(msleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>msleep <span class="ot">&lt;-</span> msleep <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, order, sleep_total, sleep_rem)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(msleep, <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 11
-  name    genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
-  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
-1 Cheetah Acin… carni Carn… lc                  12.1      NA        NA      11.9
-2 Owl mo… Aotus omni  Prim… &lt;NA&gt;                17         1.8      NA       7  
-3 Mounta… Aplo… herbi Rode… nt                  14.4       2.4      NA       9.6
-4 Greate… Blar… omni  Sori… lc                  14.9       2.3       0.133   9.1
-5 Cow     Bos   herbi Arti… domesticated         4         0.7       0.667  20  
-6 Three-… Brad… herbi Pilo… &lt;NA&gt;                14.4       2.2       0.767   9.6
-# … with 2 more variables: brainwt &lt;dbl&gt;, bodywt &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 15 × 4
+   name                       order        sleep_total sleep_rem
+   &lt;chr&gt;                      &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Cheetah                    Carnivora           12.1      NA  
+ 2 Owl monkey                 Primates            17         1.8
+ 3 Mountain beaver            Rodentia            14.4       2.4
+ 4 Greater short-tailed shrew Soricomorpha        14.9       2.3
+ 5 Cow                        Artiodactyla         4         0.7
+ 6 Three-toed sloth           Pilosa              14.4       2.2
+ 7 Northern fur seal          Carnivora            8.7       1.4
+ 8 Vesper mouse               Rodentia             7        NA  
+ 9 Dog                        Carnivora           10.1       2.9
+10 Roe deer                   Artiodactyla         3        NA  
+11 Goat                       Artiodactyla         5.3       0.6
+12 Guinea pig                 Rodentia             9.4       0.8
+13 Grivet                     Primates            10         0.7
+14 Chinchilla                 Rodentia            12.5       1.5
+15 Star-nosed mole            Soricomorpha        10.3       2.2</code></pre>
 </div>
 </div>
+<p><br> <br> There are some NAs we need to take care of.</p>
 <div class="footer footer-default">
 
 </div>
