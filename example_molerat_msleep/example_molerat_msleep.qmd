@@ -72,7 +72,7 @@ summary(model2)
 
 As mass increases, energy use increases. </br> After accounting for variation in body mass, there is a significant effect of caste.
 
-## Compare Models
+## Compare Models {.smaller}
 
 Lets check whether we are justified in removing N.S. interaction term.
 
@@ -123,7 +123,7 @@ summary(model2)
 
 Worker caste had ln0.39 more lnEnergy use than lazy caste.
 
-## Molerat Results Statement
+## Molerat Results Statement {.smaller}
 
 "We tested the hypothesis that energy expenditure of molerats differed among castes after accounting for differences in body mass between the groups. We found a positive relationship between mass and energy expenditure (slope = 0.89, t = 4.6, P \< 0.001), and after accounting for body mass, there was a difference between worker and lazy castes (t = 2.69, P = 0.01)."
 
