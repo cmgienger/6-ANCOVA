@@ -128,3 +128,15 @@ plot_stuff <- jnt_cat(X='age', Y='clutch_size', m='treatment', data=head_start, 
 
 # Turns out the error is because the package expects a data.frame object
 # to be imported (read.csv), not a tibble (read_csv). This is annoying. 
+
+
+#a ggplot instead
+ggplot(head_start, aes(x = age, y = clutch_size, color = treatment)) +
+  annotate("rect",
+           xmin = 31.3, xmax = 43.7, #range of n.s. covariate
+           ymin = -Inf, ymax = Inf,
+           fill = "grey", alpha = 0.3) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_classic(base_size = 14)
+
