@@ -79,3 +79,52 @@ ggplot(limp, aes(x = DENSITY, y = EGGS, colour = SEASON)) +
   theme_bw()
 
               
+###############################################
+#tortoise head start example - separate slopes
+###############################################
+
+library(readr)
+library(JNplots)
+library(ggplot2)
+library(HH)
+library(emmeans)
+
+
+head_start <- read.csv("head_start.csv")
+head_start$treatment <- factor(head_start$treatment)
+
+ancovaplot(clutch_size ~ age * treatment, data = head_start)
+
+mean_age <- mean(head_start$age)
+
+model_sepslopes <- lm(clutch_size ~ age * treatment, data = head_start)
+anova(model_sepslopes)
+
+emtrends(model_sepslopes, pairwise ~ treatment, var = "age")
+
+ggplot(head_start, aes(x = age, y = clutch_size, color = treatment)) +
+  annotate("rect",
+           xmin = 31.3, xmax = 43.7,
+           ymin = -Inf, ymax = Inf,
+           fill = "grey80", alpha = 0.3,
+           color = "black", linewidth = 0.8) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_classic(base_size = 14)
+
+
+#produce estimates of NS regions AND plot
+#List with four elements: (1) results from the linear model, (2) lower and (3) upper limits of non-significance in the predictor, and (4) a graphical output.
+
+as.data.frame(head_start) #dataframe required for JNplots; tibble not allowed
+
+jnt_cat(X='age', Y='clutch_size', m = 'treatment', data=head_start, plot.full = TRUE)
+
+plot_stuff <- jnt_cat(X='age', Y='clutch_size', m='treatment', data=head_start, plot.full = TRUE)
+
+# Error in xtfrm.data.frame(x) : cannot xtfrm data frames
+# In addition: Warning message:
+#   Unknown or uninitialised column: `m`. 
+
+# Turns out the error is because the package expects a data.frame object
+# to be imported (read.csv), not a tibble (read_csv). This is annoying. 

@@ -8,7 +8,7 @@
 <link href="example_molerat_msleep_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="example_molerat_msleep_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="example_molerat_msleep_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.433">
+  <meta name="generator" content="quarto-1.4.555">
 
   <title>ANCOVA</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,7 +30,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +222,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -402,10 +403,10 @@
 
 <p>Setup</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcompView)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb1-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcompView)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="molerat-example" class="slide level2 smaller">
@@ -415,14 +416,14 @@
 <section id="molerats" class="slide level2">
 <h2>Molerats</h2>
 
-<img data-src="images/molerat.jpeg" width="750" class="r-stretch quarto-figure-center"><p>How different is mean daily energy expenditure between the two groups when adjusted for differences in body mass?</p>
+<img data-src="images/molerat.jpeg" class="quarto-figure quarto-figure-center r-stretch" width="750"><p>How different is mean daily energy expenditure between the two groups when adjusted for differences in body mass?</p>
 </section>
 <section id="molerats-read-in-the-data" class="slide level2">
 <h2>Molerats: Read in the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#molerat &lt;- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp-content/data/chapter18/chap18e4MoleRatLayabouts.csv"))</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>molerat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"molerat.csv"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(molerat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#molerat &lt;- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp-content/data/chapter18/chap18e4MoleRatLayabouts.csv"))</span></span>
+<span id="cb2-2"><a href="" aria-hidden="true" tabindex="-1"></a>molerat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"molerat.csv"</span>)</span>
+<span id="cb2-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(molerat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   35 obs. of  3 variables:
  $ caste   : chr  "worker" "worker" "worker" "worker" ...
@@ -435,11 +436,11 @@
 <section id="molerats-visualize-the-data" class="slide level2">
 <h2>Molerats: Visualize the Data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(molerat, <span class="fu">aes</span>(<span class="at">x =</span> lnMass, <span class="at">y =</span> lnEnergy, <span class="at">colour =</span> caste)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#this method allows regression lines to be heterogeneous</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(molerat, <span class="fu">aes</span>(<span class="at">x =</span> lnMass, <span class="at">y =</span> lnEnergy, <span class="at">colour =</span> caste)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span> </span>
+<span id="cb4-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="co">#this method allows regression lines to be heterogeneous</span></span>
+<span id="cb4-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="example_molerat_msleep_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"><p>Lines don’t look very parallel. Need to test. <br> First we fit a model allowing separate slopes.</p>
@@ -447,8 +448,8 @@
 <section id="molerats-fit-separate-slopes-model" class="slide level2 smaller">
 <h2>Molerats: Fit Separate Slopes Model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(lnEnergy<span class="sc">~</span>lnMass<span class="sc">*</span>caste, <span class="at">data=</span>molerat)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(lnEnergy<span class="sc">~</span>lnMass<span class="sc">*</span>caste, <span class="at">data=</span>molerat)</span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -477,8 +478,8 @@ F-statistic: 7.727 on 3 and 31 DF,  p-value: 0.0005391</code></pre>
 <section id="molerats-fit-same-slopes-model" class="slide level2 smaller">
 <h2>Molerats: Fit Same Slopes Model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model2<span class="ot">&lt;-</span><span class="fu">lm</span>(lnEnergy<span class="sc">~</span>lnMass<span class="sc">+</span>caste, <span class="at">data=</span>molerat)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>model2<span class="ot">&lt;-</span><span class="fu">lm</span>(lnEnergy<span class="sc">~</span>lnMass<span class="sc">+</span>caste, <span class="at">data=</span>molerat)</span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -507,7 +508,7 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
 <h2>Compare Models</h2>
 <p>Lets check whether we are justified in removing N.S. interaction term.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model1, model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model1, model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -528,10 +529,10 @@ Model 2: lnEnergy ~ lnMass + caste
 <h2>Generate Predictions to use in Same-Slopes Graph</h2>
 <p><code>Model 2</code> had parallel slopes (no interaction).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>predictions_model2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2) </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate regression lines ('predictions') from model2 by using</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#every value of X (lnMass) to get the predicted value of Y (lnEnergy)</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>predictions_model2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a>predictions_model2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2) </span>
+<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate regression lines ('predictions') from model2 by using</span></span>
+<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#every value of X (lnMass) to get the predicted value of Y (lnEnergy)</span></span>
+<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a>predictions_model2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1        2        3        4        5        6        7        8 
 3.733944 3.857899 3.966724 4.023430 4.089595 4.102259 4.174689 4.303996 
@@ -550,10 +551,10 @@ Model 2: lnEnergy ~ lnMass + caste
 <section id="use-predictions-in-same-slopes-figure" class="slide level2">
 <h2>Use Predictions in Same Slopes Figure</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">ggplot</span>(molerat, <span class="fu">aes</span>(<span class="at">x =</span> lnMass, <span class="at">y =</span> lnEnergy, <span class="at">color =</span> caste) ) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> predictions_model2)) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">ggplot</span>(molerat, <span class="fu">aes</span>(<span class="at">x =</span> lnMass, <span class="at">y =</span> lnEnergy, <span class="at">color =</span> caste) ) <span class="sc">+</span></span>
+<span id="cb13-2"><a href=""></a>     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href=""></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> predictions_model2)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href=""></a>  <span class="fu">theme_bw</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="example_molerat_msleep_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><p>These lines are definitely parallel and our model supports this rather than the separate slopes model.</p>
@@ -562,7 +563,7 @@ Model 2: lnEnergy ~ lnMass + caste
 <h2>ANOVA Table - Same Slopes</h2>
 <p>ANOVA and Summary tables to help with reporting results.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -597,9 +598,9 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
 <h2>Practice with <code>msleep</code> Data from ggplot</h2>
 <p>Is there a difference between carnivores (Carnivora) and rodents (Rodentia) in duration of REM sleep after accounting for variation in total amount of sleep?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>msleep <span class="ot">&lt;-</span> msleep <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, order, sleep_total, sleep_rem)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(msleep, <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>msleep <span class="ot">&lt;-</span> msleep <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, order, sleep_total, sleep_rem)</span>
+<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(msleep, <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 15 × 4
    name                       order        sleep_total sleep_rem
@@ -622,8 +623,114 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
 </div>
 </div>
 <p><br> <br> There are some NAs we need to take care of.</p>
+</section>
+<section id="import-data" class="slide level2 smaller">
+<h2>Import Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> msleep <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(order <span class="sc">==</span> <span class="st">"Carnivora"</span> <span class="sc">|</span> order <span class="sc">==</span> <span class="st">"Rodentia"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sleep_total)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sleep_rem))</span>
+<span id="cb18-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="" aria-hidden="true" tabindex="-1"></a>d1<span class="sc">$</span>order <span class="ot">&lt;-</span> <span class="fu">factor</span>(d1<span class="sc">$</span>order)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="make-ancovaplot-separate-slopes" class="slide level2 smaller">
+<h2>Make ancovaplot (separate slopes)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HH)</span>
+<span id="cb19-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ancovaplot</span>(sleep_rem <span class="sc">~</span> sleep_total <span class="sc">*</span> order, <span class="at">data =</span> d1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="example_molerat_msleep_files/figure-revealjs/ancovaplot-1.png" width="960" class="r-stretch"></section>
+<section id="make-ggplot-separate-slopes" class="slide level2 smaller">
+<h2>Make ggplot (separate slopes)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> </span>
+<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(d1, <span class="fu">aes</span>(sleep_total, sleep_rem, <span class="at">color=</span>order))<span class="sc">+</span></span>
+<span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'lm'</span>, <span class="at">se=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="do">##sep. slopes is the default</span></span>
+<span id="cb20-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb20-6"><a href="" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="example_molerat_msleep_files/figure-revealjs/plot%201-1.png" width="960" class="r-stretch"></section>
+<section id="msleep-fit-separate-slopes-model" class="slide level2 smaller">
+<h2>msleep: Fit Separate Slopes Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sleep_rem<span class="sc">~</span>sleep_total <span class="sc">*</span> order, <span class="at">data=</span>d1)</span>
+<span id="cb21-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: sleep_rem
+                  Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+sleep_total        1 6.7815  6.7815 19.9861 0.0003864 ***
+order              1 2.3383  2.3383  6.8913 0.0183772 *  
+sleep_total:order  1 0.2331  0.2331  0.6871 0.4193439    
+Residuals         16 5.4290  0.3393                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><br></p>
+<p>No significant interaction, so no evidence that lines should be allowed to cross. Remove the interaction term -&gt; refit model -&gt; replot the figure</p>
+</section>
+<section id="msleep-fit-same-slopes-model" class="slide level2 smaller">
+<h2>msleep: Fit Same Slopes Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sleep_rem<span class="sc">~</span>sleep_total <span class="sc">+</span> order, <span class="at">data=</span>d1)</span>
+<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: sleep_rem
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+sleep_total  1 6.7815  6.7815 20.3609 0.0003076 ***
+order        1 2.3383  2.3383  7.0205 0.0168536 *  
+Residuals   17 5.6621  0.3331                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><br> <br></p>
+<p>Make ‘predictions’ (the regression lines) for a same-slopes fit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a>predictions_m2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2) <span class="co">#forces lines to be parallel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="compare-models-1" class="slide level2 smaller">
+<h2>Compare Models</h2>
+<p>Lets check whether we are justified in removing N.S. interaction term.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1, m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: sleep_rem ~ sleep_total * order
+Model 2: sleep_rem ~ sleep_total + order
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     16 5.4290                           
+2     17 5.6621 -1  -0.23314 0.6871 0.4193</code></pre>
+</div>
+</div>
+</section>
+<section id="msleep-replot-the-data-for-a-same-slopes-model-fit." class="slide level2 smaller">
+<h2>msleep: Replot the data for a same-slopes model fit.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>p2 <span class="ot">&lt;-</span> </span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">ggplot</span>(d1, <span class="fu">aes</span>(sleep_total, sleep_rem, <span class="at">color=</span>order))<span class="sc">+</span></span>
+<span id="cb28-3"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb28-4"><a href=""></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> predictions_m2)) <span class="sc">+</span></span>
+<span id="cb28-5"><a href=""></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb28-6"><a href=""></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="example_molerat_msleep_files/figure-revealjs/plot%202-1.png" width="960" class="r-stretch"><p>Results statement here…</p>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </section>
     </div>
@@ -653,7 +760,6 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -953,10 +1059,27 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -966,8 +1089,17 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
@@ -981,7 +1113,11 @@ F-statistic: 11.07 on 2 and 32 DF,  p-value: 0.0002213</code></pre>
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {

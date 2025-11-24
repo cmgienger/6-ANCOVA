@@ -24,7 +24,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Molerat Example {.smaller}
 
-Mole rats are the only known mammals with distinct social castes. A single queen and a small number of males are the only reproducing individuals in a colony. Remaining individuals, called workers, gather food, defend the colony, care for the young, and maintain the burrows. <br> <br> "Frequent workers" do almost all of the work in the colony, whereas "infrequent workers" do little work except on rare occasions after rains, when they extend the burrow system. To assess the physiological differences between the two types of workers, Scantlebury et al. (2006) compared daily energy expenditures of wild mole rats during a dry season. Energy expenditure appears to vary with body mass in both groups, but infrequent workers are heavier than frequent workers.
+Mole rats are the only known mammals with distinct social castes.
+A single queen and a small number of males are the only reproducing individuals in a colony.
+Remaining individuals, called workers, gather food, defend the colony, care for the young, and maintain the burrows.
+<br> <br> "Frequent workers" do almost all of the work in the colony, whereas "infrequent workers" do little work except on rare occasions after rains, when they extend the burrow system.
+To assess the physiological differences between the two types of workers, Scantlebury et al. (2006) compared daily energy expenditures of wild mole rats during a dry season.
+Energy expenditure appears to vary with body mass in both groups, but infrequent workers are heavier than frequent workers.
 
 ## Molerats
 
@@ -52,7 +57,9 @@ ggplot(molerat, aes(x = lnMass, y = lnEnergy, colour = caste)) +
   theme_bw(15)
 ```
 
-Lines don't look very parallel. Need to test. </br> First we fit a model allowing separate slopes.
+Lines don't look very parallel.
+Need to test.
+</br> First we fit a model allowing separate slopes.
 
 ## Molerats: Fit Separate Slopes Model {.smaller}
 
@@ -70,11 +77,13 @@ model2<-lm(lnEnergy~lnMass+caste, data=molerat)
 summary(model2)
 ```
 
-As mass increases, energy use increases. </br> After accounting for variation in body mass, there is a significant effect of caste.
+As mass increases, energy use increases.
+</br> After accounting for variation in body mass, there is a significant effect of caste.
 
 ## Compare Models {.smaller}
 
-Lets check whether we are justified in removing N.S. interaction term.
+Lets check whether we are justified in removing N.S.
+interaction term.
 
 ```{r}
 anova(model1, model2)
@@ -82,7 +91,8 @@ anova(model1, model2)
 
 -   There is no significant difference between the models, so the simpler explanation should be supported.
 
--   Including the N.S. interaction term did not lead to a better explanation.
+-   Including the N.S.
+    interaction term did not lead to a better explanation.
 
 -   Notice that the P value of 0.32 for the model comparison is the same as the interaction term P value in model1.
 
@@ -127,7 +137,8 @@ Worker caste had ln0.39 more lnEnergy use than lazy caste.
 
 "We tested the hypothesis that energy expenditure of molerats differed among castes after accounting for differences in body mass between the groups. We found a positive relationship between mass and energy expenditure (slope = 0.89, t = 4.6, P \< 0.001), and after accounting for body mass, there was a difference between worker and lazy castes (t = 2.69, P = 0.01)."
 
-</br> </br> The difference in energy expenditure between lazy rats and worker rats was ln(0.393) \[look at summary(model2) output\]. If we are going to report this, we need to back transform (not done here for clarity).
+</br> </br> The difference in energy expenditure between lazy rats and worker rats was ln(0.393) \[look at summary(model2) output\].
+If we are going to report this, we need to back transform (not done here for clarity).
 
 ## Practice with `msleep` Data from ggplot {.smaller}
 
@@ -140,3 +151,79 @@ head(msleep, 15)
 ```
 
 </br> </br> There are some NAs we need to take care of.
+
+## Import Data {.smaller}
+
+```{r data 1}
+d1 <- msleep %>%
+  filter(order == "Carnivora" | order == "Rodentia") %>%
+  filter(!is.na(sleep_total)) %>%
+  filter(!is.na(sleep_rem))
+
+d1$order <- factor(d1$order)
+```
+
+## Make ancovaplot (separate slopes) {.smaller}
+
+```{r ancovaplot}
+library(HH)
+ancovaplot(sleep_rem ~ sleep_total * order, data = d1)
+```
+## Make ggplot (separate slopes) {.smaller}
+
+```{r plot 1}
+p1 <- 
+  ggplot(d1, aes(sleep_total, sleep_rem, color=order))+
+  geom_point(size=5) +
+  geom_smooth(method = 'lm', se=FALSE) + ##sep. slopes is the default
+  theme_bw()
+p1
+```
+## msleep: Fit Separate Slopes Model {.smaller}
+
+```{r model 1}
+m1 <- lm(sleep_rem~sleep_total * order, data=d1)
+anova(m1)
+```
+</br>
+
+No significant interaction, so no evidence that lines should be allowed to cross. Remove the 
+interaction term -> refit model -> replot the figure
+
+## msleep: Fit Same Slopes Model {.smaller}
+
+```{r}
+m2 <- lm(sleep_rem~sleep_total + order, data=d1)
+anova(m2)
+```
+
+<br>
+<br>
+
+Make 'predictions' (the regression lines) for a same-slopes fit.
+```{r predictions for same slopes model}
+predictions_m2 <- predict(m2) #forces lines to be parallel
+```
+
+## Compare Models {.smaller}
+
+Lets check whether we are justified in removing N.S.
+interaction term.
+
+```{r}
+anova(m1, m2)
+```
+
+## msleep: Replot the data for a same-slopes model fit. {.smaller}
+
+```{r plot 2}
+#| code-line-numbers: "4"
+p2 <- 
+  ggplot(d1, aes(sleep_total, sleep_rem, color=order))+
+  geom_point(size=5) +
+  geom_line(aes(y = predictions_m2)) +
+  theme_bw()
+p2
+```
+
+Results statement here...
